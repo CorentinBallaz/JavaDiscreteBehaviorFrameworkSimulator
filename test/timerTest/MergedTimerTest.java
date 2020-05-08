@@ -54,7 +54,7 @@ class MergedTimerTest {
 	}
 	
 	@Test
-	void nextTestFalse() {
+	void nextTestnull() {
 		OneShotTimer ost1 = new OneShotTimer(0);
 		OneShotTimer ost2 = new OneShotTimer(0);
 		ost1.next();
@@ -62,9 +62,38 @@ class MergedTimerTest {
 		
 		MergedTimer mt = new MergedTimer(ost1, ost2);
 		
-		boolean actual = mt.hasNext();
+		Integer actual = mt.next();
 		
-		assertFalse(actual);
+		assertNull(actual);
+	}
+	
+	@Test
+	void nextTestnull2() {
+		OneShotTimer ost1 = new OneShotTimer(0);
+		PeriodicTimer pt1 = new PeriodicTimer(0);
+		ost1.next();
+
+		
+		MergedTimer mt = new MergedTimer(ost1, pt1);
+		
+		Integer actual = mt.next();
+		
+		assertNull(actual);
+	}
+	
+	@Test
+	void nextTest() {
+		OneShotTimer ost1 = new OneShotTimer(0);
+		PeriodicTimer pt1 = new PeriodicTimer(0);
+		
+		
+		MergedTimer mt = new MergedTimer(ost1, pt1);
+		
+		Integer actual = mt.next();
+		
+		Integer expected = 0;
+		
+		assertEquals(expected, actual);
 	}
 
 }
