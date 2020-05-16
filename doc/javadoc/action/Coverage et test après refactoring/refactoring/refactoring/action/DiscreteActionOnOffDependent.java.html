@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>DiscreteActionOnOffDependent.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">action (16 mai 2020 16:12:31)</a> &gt; <a href="../../index.html" class="el_group">refactoring</a> &gt; <a href="../index.html" class="el_bundle">refactoring</a> &gt; <a href="index.source.html" class="el_package">action</a> &gt; <span class="el_source">DiscreteActionOnOffDependent.java</span></div><h1>DiscreteActionOnOffDependent.java</h1><pre class="source lang-java linenums">package action;
+
+import java.lang.reflect.Method;
+import java.util.TreeSet;
+import java.util.Vector;
+
+import timer.DateTimer;
+import timer.Timer;
+
+/**
+ * @author flver
+ *
+ */
+
+/**
+ * DiscreteActionDependantOnOff is the class that allows the creation and the management of a serie (TreeSet) of discrete actions with an On Off dependence :
+ * first action (method) called is On, then method nextAction() is called to select the next action. Alternate between On and Off action.
+ * 
+ * @param o
+ * @param on
+ * @param timerOn
+ * @param off
+ * @param timerOff
+ */
+
+public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
+	
+	protected DiscreteActionInterface onAction;
+	protected DiscreteActionInterface offAction;
+	protected DiscreteActionInterface currentAction;
+<span class="fc" id="L31">	private Integer lastOffDelay=0;</span>
+	
+	/**
+	 * DiscreteActionDependantOnOff is the class that allows the creation and the management of a serie (TreeSet) of discrete actions with an On Off dependence :
+	 * first action (method) called is On, then method nextAction() is called to select the next action. Alternate between On and Off action.
+	 * 
+	 * @param o
+	 * @param on
+	 * @param timerOn
+	 * @param off
+	 * @param timerOff
+	 */
+	
+<span class="fc" id="L44">	public DiscreteActionOnOffDependent(Object o, String on, Timer timerOn, String off, Timer timerOff){</span>
+<span class="fc" id="L45">		this.onAction = new DiscreteAction(o, on, timerOn);</span>
+<span class="fc" id="L46">		this.offAction = new DiscreteAction(o, off, timerOff);</span>
+<span class="fc" id="L47">		this.currentAction = this.offAction;</span>
+<span class="fc" id="L48">	}</span>
+
+	/**
+	 * 
+	 * @param o
+	 * @param on
+	 * @param datesOn
+	 * @param off
+	 * @param datesOff
+	 */
+<span class="fc" id="L58">	public DiscreteActionOnOffDependent(Object o, String on, TreeSet&lt;Integer&gt; datesOn, String off, TreeSet&lt;Integer&gt; datesOff){</span>
+<span class="fc" id="L59">		this.onAction = new DiscreteAction(o, on, new DateTimer(datesOn));</span>
+<span class="fc" id="L60">		this.offAction = new DiscreteAction(o, off, new DateTimer(datesOff));</span>
+		
+<span class="fc bfc" id="L62" title="All 2 branches covered.">		if(datesOn.first() &lt; datesOff.first()){</span>
+<span class="fc" id="L63">			this.currentAction = this.onAction;</span>
+<span class="fc" id="L64">		}else{</span>
+<span class="fc" id="L65">			this.currentAction = this.offAction;</span>
+		}
+<span class="fc" id="L67">	}</span>
+	/**
+	 * Decrease the lapsTime by t of the current discrete action
+	 * @param t
+	 */
+	public	void spendTime(int t) {
+<span class="fc" id="L73">		this.currentAction.spendTime(t);</span>
+<span class="fc" id="L74">	}</span>
+	/**
+	 * @return the method of the current action
+	 */
+	public Method getMethod() {
+<span class="fc" id="L79">		return this.currentAction.getMethod();</span>
+	}
+	/**
+	 * @return the last laps time of the current action without update
+	 */
+	public Integer getCurrentLapsTime() {
+<span class="fc" id="L85">		return this.currentAction.getCurrentLapsTime();</span>
+	}
+	/**
+	 * @return the object of the current action
+	 */
+	public Object getObject() {
+<span class="fc" id="L91">		return this.currentAction.getObject();</span>
+	}
+	/**
+	 * Compare currentAction lapsTime to another DiscreteAction lapsTime
+	 * @return 1,-1 or 0
+	 */
+	public int compareTo(DiscreteActionInterface c) {
+<span class="fc" id="L98">		return this.currentAction.compareTo(c);</span>
+	}
+	/**
+	 * Currently, this method calls nextAction and return this. &quot;nextAction&quot; method code shall be put in &quot;next&quot; method and &quot;nextAction&quot; method deleted.
+	 * @return DiscreteActionInterface
+	 */
+	public DiscreteActionInterface next() {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">		if (this.currentAction == this.onAction){</span>
+<span class="fc" id="L106">			this.currentAction = this.offAction;</span>
+<span class="fc" id="L107">			this.currentAction = this.currentAction.next();</span>
+<span class="fc" id="L108">			this.lastOffDelay = this.currentAction.getCurrentLapsTime();</span>
+<span class="fc" id="L109">		}else{</span>
+<span class="fc" id="L110">			this.currentAction = this.onAction;</span>
+<span class="fc" id="L111">			this.currentAction = this.currentAction.next();</span>
+<span class="fc" id="L112">			this.currentAction.spendTime(this.lastOffDelay);</span>
+		}
+<span class="fc" id="L114">		return this;</span>
+	}
+	/**
+	 * Returns true if the timmers of onAction or offAction still have some elements
+	 * @return boolean
+	 */
+	public boolean hasNext() {
+<span class="fc bfc" id="L121" title="All 4 branches covered.">		return this.onAction.hasNext() || this.offAction.hasNext();		</span>
+	}
+
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>action (16 mai 2020 16:12:31)</div></body></html>

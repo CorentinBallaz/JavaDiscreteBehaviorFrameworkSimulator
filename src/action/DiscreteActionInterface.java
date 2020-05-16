@@ -3,48 +3,41 @@ package action;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-/*
- * TODO must implement Iterator<Action>
- */
 public interface DiscreteActionInterface extends Comparable<DiscreteActionInterface>, Iterator<DiscreteActionInterface>{
 
 	/**
-	 * decrease the time of discrete action 
+	 * decrease the time of the discrete action 
 	 */
 	public	void spendTime(int t);
 	
 	/**
-	 * return the method to execute
+	 * return the method of the discrete action
 	 */
 	public Method getMethod();
 	
 	/**
-	 * return the last laps time without update
+	 * return the lapsTime of the discrete action
 	 */
 	public Integer getCurrentLapsTime();
 	
 	/**
-	 * get the object on which the method must be invoked
+	 * return the object of the disrecte actiion
 	 */
 	public Object getObject();
 
-	// COMPARAISON
 	/**
-	 * compare discrete action according to the time before execution
+	 * compare two discrete actions on their lapsTimes
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	public int compareTo(DiscreteActionInterface c);
 	
 	/*
-	 * (non-Javadoc)
 	 * @see java.util.Iterator#next()
 	 */
 	public DiscreteActionInterface next();
-	
 	/*
-	 * (non-Javadoc)
 	 * @see java.util.Iterator#hasNext()
 	 */
-	//public boolean hasNext();
+	public boolean hasNext();
 }

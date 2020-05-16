@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>DiscreteActionDependentTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">action (16 mai 2020 16:12:31)</a> &gt; <a href="../../index.html" class="el_group">refactoring</a> &gt; <a href="../index.html" class="el_bundle">refactoring</a> &gt; <a href="index.source.html" class="el_package">testAction</a> &gt; <span class="el_source">DiscreteActionDependentTest.java</span></div><h1>DiscreteActionDependentTest.java</h1><pre class="source lang-java linenums">package testAction;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+import action.ClasseTest;
+import action.DiscreteActionDependent;
+import timer.OneShotTimer;
+import timer.PeriodicTimer;
+
+<span class="fc" id="L12">class DiscreteActionDependentTest {</span>
+
+	
+	// En l'état, aucune méthode ne fonctionne comme il se doit si on regarde les tests
+	// car la méthode next() n'est pas bonne, d'où la nécessité de refactorer DiscreteActionDependent comme 
+	// indiqué en Todo.
+	
+	@Test
+	void testAddDependence() {
+<span class="fc" id="L21">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L22">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L23">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L24">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L26">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L27">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L28">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L30">		action.addDependence(test2, m2, timer2);</span>
+		
+<span class="fc" id="L32">		action.next(); //next() ne fonctionne pas correctement</span>
+<span class="fc" id="L33">		action.next();</span>
+		
+<span class="fc" id="L35">		assertEquals(m2,action.getMethod().getName());</span>
+<span class="fc" id="L36">		assertEquals(test2,action.getObject());</span>
+		
+		
+<span class="fc" id="L39">	}</span>
+	
+	//On ne test pas nextMethod car elle n'a pas lieu d'être étant donné l'implémentation de l'interface.
+	
+	
+	@Test
+	void testReInit() {
+<span class="fc" id="L46">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L47">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L48">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L49">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L51">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L52">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L53">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L55">		action.addDependence(test2, m2, timer2);</span>
+		
+<span class="fc" id="L57">		action.next();</span>
+<span class="fc" id="L58">		action.next();</span>
+<span class="fc" id="L59">		action.next();</span>
+		
+<span class="fc" id="L61">		assertEquals(m,action.getMethod().getName());</span>
+<span class="fc" id="L62">		assertEquals(test,action.getObject());</span>
+		
+<span class="fc" id="L64">		action.next();</span>
+<span class="fc" id="L65">		assertEquals(test2,action.getObject());</span>
+<span class="fc" id="L66">	}</span>
+	
+	@Test
+	void testSpendTime() {
+<span class="fc" id="L70">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L71">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L72">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L73">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L75">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L76">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L77">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L79">		ClasseTest test3 = new ClasseTest();</span>
+<span class="fc" id="L80">		String m3 = &quot;methodeTest3&quot;;</span>
+<span class="fc" id="L81">		OneShotTimer timer3 = new OneShotTimer(6);</span>
+		
+<span class="fc" id="L83">		action.addDependence(test2, m2, timer2);</span>
+<span class="fc" id="L84">		action.addDependence(test3, m3, timer3);</span>
+		
+<span class="fc" id="L86">		action.next();</span>
+<span class="fc" id="L87">		action.spendTime(2);</span>
+<span class="fc" id="L88">		assertEquals(3, action.getCurrentLapsTime());</span>
+		
+<span class="fc" id="L90">		action.next();</span>
+<span class="fc" id="L91">		action.spendTime(2);</span>
+<span class="fc" id="L92">		assertEquals(1, action.getCurrentLapsTime());</span>
+		
+<span class="fc" id="L94">		action.next();</span>
+<span class="fc" id="L95">		action.spendTime(2);</span>
+<span class="fc" id="L96">		assertEquals(4, action.getCurrentLapsTime());</span>
+		
+<span class="fc" id="L98">		action.next();</span>
+		
+<span class="fc" id="L100">	}</span>
+	
+	@Test
+	void testCompareTo() {
+		
+		//CompareTo ayant déjà été testé dans DiscreteAction, on estime ce test suffisant
+		
+<span class="fc" id="L107">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L108">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L109">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L110">		DiscreteActionDependent action1 = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L112">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L113">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L114">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+<span class="fc" id="L115">		DiscreteActionDependent action2 = new DiscreteActionDependent(test2,m2,timer2);</span>
+		
+<span class="fc" id="L117">		assertEquals(1,action1.compareTo(action2));</span>
+<span class="fc" id="L118">	}</span>
+	
+	@Test 
+	void testNext() {
+<span class="fc" id="L122">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L123">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L124">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L125">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L127">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L128">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L129">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L131">		action.addDependence(test2, m2, timer2);</span>
+		
+<span class="fc" id="L133">		action.next();</span>
+
+<span class="fc" id="L135">		assertEquals(m,action.getMethod().getName());</span>
+<span class="fc" id="L136">		assertEquals(test,action.getObject());</span>
+		
+<span class="fc" id="L138">		action.next();</span>
+		
+<span class="fc" id="L140">		assertEquals(m2,action.getMethod().getName());</span>
+<span class="fc" id="L141">		assertEquals(test2,action.getObject());</span>
+<span class="fc" id="L142">	}</span>
+	
+	@Test
+	void testHasNextWithTwoActionsAndOneActionNext() {
+<span class="fc" id="L146">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L147">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L148">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L149">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L151">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L152">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L153">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L155">		action.addDependence(test2, m2, timer2);</span>
+<span class="fc" id="L156">		assertEquals(true,action.hasNext());</span>
+<span class="fc" id="L157">	}</span>
+	
+	@Test
+	void testHasNextWithTwoActionsAndNoNextAction() {
+<span class="fc" id="L161">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L162">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L163">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L164">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L166">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L167">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L168">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L170">		action.addDependence(test2, m2, timer2);</span>
+
+<span class="fc" id="L172">		action.next();</span>
+<span class="fc" id="L173">		action.next();</span>
+<span class="fc" id="L174">		assertEquals(false,action.hasNext());</span>
+<span class="fc" id="L175">	}</span>
+	
+	@Test
+	void testHasNextWithTwoActionsAndNoNextActionButStillValueInTimmer() {
+<span class="fc" id="L179">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L180">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L181">		PeriodicTimer timer = new PeriodicTimer(5);</span>
+<span class="fc" id="L182">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L184">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L185">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L186">		PeriodicTimer timer2 = new PeriodicTimer(3);</span>
+<span class="fc" id="L187">		action.addDependence(test2, m2, timer2);</span>
+		
+<span class="fc" id="L189">		action.next();</span>
+<span class="fc" id="L190">		action.next();</span>
+		
+<span class="fc" id="L192">		assertEquals(true,action.hasNext());</span>
+<span class="fc" id="L193">	}</span>
+	
+	@Test
+	void testHasNextWithThreeActionsAndOneActionNextAndNoMoreValueInTimmer() {
+<span class="fc" id="L197">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L198">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L199">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L200">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L202">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L203">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L204">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+<span class="fc" id="L205">		action.addDependence(test2, m2, timer2);</span>
+		
+<span class="fc" id="L207">		ClasseTest test3 = new ClasseTest();</span>
+<span class="fc" id="L208">		String m3 = &quot;methodeTest3&quot;;</span>
+<span class="fc" id="L209">		OneShotTimer timer3 = new OneShotTimer(4);</span>
+<span class="fc" id="L210">		action.addDependence(test3, m3, timer3);</span>
+		
+<span class="fc" id="L212">		action.next();</span>
+<span class="fc" id="L213">		action.next();</span>
+		
+<span class="fc" id="L215">		assertEquals(true,action.hasNext());</span>
+<span class="fc" id="L216">	}</span>
+	
+	
+	@Test
+	void testIsEmptyWithTwoActionsAndOneActionNext() {
+<span class="fc" id="L221">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L222">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L223">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L224">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L226">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L227">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L228">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L230">		action.addDependence(test2, m2, timer2);</span>
+		
+<span class="fc" id="L232">		assertEquals(false,action.isEmpty());</span>
+<span class="fc" id="L233">	}</span>
+	
+	@Test
+	void testIsEmptyWithTwoActionsAndNoNextAction() {
+<span class="fc" id="L237">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L238">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L239">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L240">		DiscreteActionDependent action = new DiscreteActionDependent(test,m,timer);</span>
+		
+<span class="fc" id="L242">		ClasseTest test2 = new ClasseTest();</span>
+<span class="fc" id="L243">		String m2 = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L244">		OneShotTimer timer2 = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L246">		action.addDependence(test2, m2, timer2);</span>
+<span class="fc" id="L247">		action.next();</span>
+<span class="fc" id="L248">		action.next();</span>
+<span class="fc" id="L249">		assertEquals(true,action.isEmpty());</span>
+<span class="fc" id="L250">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>action (16 mai 2020 16:12:31)</div></body></html>
