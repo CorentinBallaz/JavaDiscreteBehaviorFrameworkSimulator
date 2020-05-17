@@ -4,7 +4,6 @@ public class PeriodicTimer implements Timer {
 
 	private int period;
 	private int next;
-	private RandomTimer moreOrLess = null;
 	
 	/**
 	 * Constructor class PeriodicTimer
@@ -40,11 +39,11 @@ public class PeriodicTimer implements Timer {
 	@Override
 	public Integer next() {
 		
-		int next =  this.next;
+		int ret =  this.next;
 		
 		this.next += this.period;
 		
-		return next;
+		return ret;
 	}
 	
 
