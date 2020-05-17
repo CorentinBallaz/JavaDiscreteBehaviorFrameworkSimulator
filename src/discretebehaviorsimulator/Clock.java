@@ -1,4 +1,4 @@
-package discreteBehaviorSimulator;
+package discretebehaviorsimulator;
 
 
 import java.util.Date;
@@ -85,19 +85,7 @@ public class Clock {
 			o.nextClockChange(this.nextJump);
 		}
 	}
-	/*public void setTime(int time) throws IllegalAccessException {
-		this.lock.lock();
-		if (this.time < time) {
-			this.time = time;
-			for(ClockObserver o:this.observers) {
-				o.ClockChange();
-			}
-		}else{
-			this.lock.unlock();
-			throw new IllegalAccessException("Set time error, cannot go back to the past !!!");
-		}
-		this.lock.unlock();
-	}*/
+
 
 	/**
 	 * Increments the time if the parameter and the time of the next jump match.

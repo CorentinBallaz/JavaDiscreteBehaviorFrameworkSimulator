@@ -1,5 +1,5 @@
 package discreteBehaviorSimulatorTest;
-import discreteBehaviorSimulator.ClockObserver;
+import discretebehaviorsimulator.ClockObserver;
 public class TestClockObserver implements ClockObserver {
 	
 	 private int currentTime;
