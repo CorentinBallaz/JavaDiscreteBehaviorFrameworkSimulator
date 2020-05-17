@@ -49,8 +49,8 @@ public class DiscreteActionDependent implements DiscreteActionInterface {
 	 * @param depentMethodName 
 	 * @param timerDependence
 	 */
-	public void addDependence(Object o, String depentMethodName, Timer timerDependence) {
-		this.dependentActions.add(new DiscreteAction(o, depentMethodName, timerDependence));
+	public void addDependence(Object o, String dependentMethodName, Timer timerDependence) {
+		this.dependentActions.add(new DiscreteAction(o, dependentMethodName, timerDependence));
 		this.it = this.dependentActions.iterator();
 	}
 	
