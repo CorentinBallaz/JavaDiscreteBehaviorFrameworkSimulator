@@ -138,6 +138,12 @@ public class DiscreteActionSimulator implements Runnable {
 		return sleepTime;
 	}
 	
+	/***
+	 * This method is called in the method runAction method, useful to write statement to the log file
+	 * @param m
+	 * @param o
+	 * @param sleepTime
+	 */
 	private void logRunAction(Method m, Object o, int sleepTime) {
 		String tologger = "[DAS] run action " + m.getName() + " on " + o.getClass().getName() + ":"+o.hashCode();
 		if (this.globalTime!=null){
@@ -176,6 +182,10 @@ public class DiscreteActionSimulator implements Runnable {
 		}
 	}
 	
+	/**
+	 * This method is called in the method updateTimes method, useful to write statement to the log file
+	 * @param a
+	 */
 	public void loggedUpdatesTimes(DiscreteActionInterface a) {
 		String toLogger = "[DAS] reset action " + a.getMethod().getName() + " on " + a.getObject().getClass().getName() + ":" + a.getObject().hashCode();
 		if (this.globalTime!=null) {
