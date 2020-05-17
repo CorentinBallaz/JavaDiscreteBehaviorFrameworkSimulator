@@ -17,6 +17,7 @@ public class MergedTimer implements Timer{
 	
 	/**
 	 *@return hasNext of each timer 1 & 2
+	 * True if both timer have hasNext, false otherwise
 	 */
 	@Override
 	public boolean hasNext() {

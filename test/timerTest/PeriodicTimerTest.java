@@ -25,6 +25,19 @@ class PeriodicTimerTest {
 	@AfterAll
 	static void tearDownAfterClass() throws Exception {
 	}
+	
+	@Test
+	void getPeriodTest() {
+		int expected = 10;
+		int actual = pt1.getPeriod();
+		
+		assertEquals(expected, actual);
+		
+		
+		actual = pt2.getPeriod();
+		
+		assertEquals(expected, actual);
+	}
 
 	@Test
 	void hasNextTest() {
