@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>DiscreteActionOnOffDependent.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">action (2) (16 mai 2020 17:01:14)</a> &gt; <a href="../../index.html" class="el_group">src</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">action</a> &gt; <span class="el_source">DiscreteActionOnOffDependent.java</span></div><h1>DiscreteActionOnOffDependent.java</h1><pre class="source lang-java linenums">package action;
+
+import java.lang.reflect.Method;
+import java.util.TreeSet;
+import java.util.Vector;
+
+import timer.DateTimer;
+import timer.Timer;
+
+/**
+ * @author flver
+ *
+ */
+
+/**
+ * DiscreteActionDependantOnOff is the class that allows the creation and the management of a serie (TreeSet) of discrete actions with an On Off dependence :
+ * first action (method) called is On, then method nextAction() is called to select the next action. Alternate between On and Off action.
+ * 
+ * @param o
+ * @param on
+ * @param timerOn
+ * @param off
+ * @param timerOff
+ */
+
+public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
+	
+	protected DiscreteActionInterface onAction;
+	protected DiscreteActionInterface offAction;
+	protected DiscreteActionInterface currentAction;
+	
+	private Integer currentLapsTime;
+<span class="fc" id="L33">	private Integer lastOffDelay=0;</span>
+	
+	/**
+	 * DiscreteActionDependantOnOff is the class that allows the creation and the management of a serie (TreeSet) of discrete actions with an On Off dependence :
+	 * first action (method) called is On, then method nextAction() is called to select the next action. Alternate between On and Off action.
+	 * 
+	 * @param o
+	 * @param on
+	 * @param timerOn
+	 * @param off
+	 * @param timerOff
+	 */
+	/*public DiscreteActionOnOffDependent(Wo o, Method on, Timer timerOn, Method off, Timer timerOff){
+		this.onAction = new DiscreteAction(o, on, timerOn);
+		this.offAction = new DiscreteAction(o, off, timerOff);
+		
+		this.currentAction = this.onAction;
+	}*/
+	
+<span class="fc" id="L52">	public DiscreteActionOnOffDependent(Object o, String on, Timer timerOn, String off, Timer timerOff){</span>
+<span class="fc" id="L53">		this.onAction = new DiscreteAction(o, on, timerOn);</span>
+<span class="fc" id="L54">		this.offAction = new DiscreteAction(o, off, timerOff);</span>
+		
+<span class="fc" id="L56">		this.currentAction = this.offAction;</span>
+<span class="fc" id="L57">		this.currentLapsTime = 0;</span>
+<span class="fc" id="L58">	}</span>
+
+	private void dates2Timalapse(TreeSet&lt;Integer&gt; datesOn, TreeSet&lt;Integer&gt; datesOff, Vector&lt;Integer&gt; timeLapseOn, Vector&lt;Integer&gt; timeLapseOff) {
+		Vector&lt;Integer&gt; currentTimeLapse;
+		TreeSet&lt;Integer&gt; currentDates;
+<span class="nc" id="L63">		Integer date=0;</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">		if(datesOn.first()&lt;datesOff.first()) {</span>
+<span class="nc" id="L65">			currentTimeLapse = timeLapseOn;</span>
+<span class="nc" id="L66">			currentDates = datesOn;</span>
+<span class="nc" id="L67">		}else {</span>
+<span class="nc" id="L68">			currentTimeLapse = timeLapseOff;	</span>
+<span class="nc" id="L69">			currentDates = datesOff;		</span>
+		}
+		Integer nextDate;
+		
+<span class="nc bnc" id="L73" title="All 4 branches missed.">		while(datesOn.size()&gt;0 || datesOff.size()&gt;0) {</span>
+<span class="nc" id="L74">			nextDate = currentDates.first();</span>
+		
+<span class="nc" id="L76">			currentTimeLapse.add(nextDate - date);</span>
+<span class="nc" id="L77">			currentDates.remove(nextDate);</span>
+		
+<span class="nc" id="L79">			date = nextDate;</span>
+			
+<span class="nc bnc" id="L81" title="All 2 branches missed.">			if(currentDates == datesOn) {</span>
+<span class="nc" id="L82">				currentDates = datesOff;</span>
+<span class="nc" id="L83">				currentTimeLapse = timeLapseOff;</span>
+<span class="nc" id="L84">			}else {</span>
+<span class="nc" id="L85">				currentDates = datesOn;</span>
+<span class="nc" id="L86">				currentTimeLapse = timeLapseOn;			</span>
+			}
+		}
+		
+<span class="nc" id="L90">	}</span>
+	/**
+	 * 
+	 * @param o
+	 * @param on
+	 * @param datesOn
+	 * @param off
+	 * @param datesOff
+	 */
+<span class="fc" id="L99">	public DiscreteActionOnOffDependent(Object o, String on, TreeSet&lt;Integer&gt; datesOn, String off, TreeSet&lt;Integer&gt; datesOff){</span>
+		/*Vector&lt;Integer&gt; timeLapseOn = new Vector&lt;Integer&gt;();
+		Vector&lt;Integer&gt; timeLapseOff = new Vector&lt;Integer&gt;();
+		
+		dates2Timalapse((TreeSet&lt;Integer&gt;)datesOn.clone(), (TreeSet&lt;Integer&gt;)datesOff.clone(), timeLapseOn, timeLapseOff);
+		*/
+<span class="fc" id="L105">		this.onAction = new DiscreteAction(o, on, new DateTimer(datesOn));</span>
+<span class="fc" id="L106">		this.offAction = new DiscreteAction(o, off, new DateTimer(datesOff));</span>
+		
+		
+		
+<span class="fc bfc" id="L110" title="All 2 branches covered.">		if(datesOn.first() &lt; datesOff.first()){</span>
+<span class="fc" id="L111">			this.currentAction = this.onAction;</span>
+<span class="fc" id="L112">		}else{</span>
+<span class="fc" id="L113">			this.currentAction = this.offAction;</span>
+		}
+<span class="fc" id="L115">	}</span>
+	/**
+	 * Select the next action, if current action is On then select Off action, if current is Off then select On. 
+	 * This is the &quot;next&quot; method job, so there's probably an issue there, because nextAction isn't defined by DiscreteActionInterface.
+	 */
+	public void nextAction(){
+<span class="fc bfc" id="L121" title="All 2 branches covered.">		if (this.currentAction == this.onAction){</span>
+<span class="fc" id="L122">			this.currentAction = this.offAction;</span>
+<span class="fc" id="L123">			this.currentAction = this.currentAction.next();</span>
+<span class="fc" id="L124">			this.lastOffDelay = this.currentAction.getCurrentLapsTime();</span>
+<span class="fc" id="L125">		}else{</span>
+<span class="fc" id="L126">			this.currentAction = this.onAction;</span>
+<span class="fc" id="L127">			this.currentAction = this.currentAction.next();</span>
+<span class="fc" id="L128">			this.currentAction.spendTime(this.lastOffDelay);</span>
+		}
+<span class="fc" id="L130">	}</span>
+	/**
+	 * Decrease the lapsTime by t of the current discrete action
+	 * @param t
+	 */
+	public	void spendTime(int t) {
+<span class="fc" id="L136">		this.currentAction.spendTime(t);</span>
+<span class="fc" id="L137">	}</span>
+	/**
+	 * @return the method of the current action
+	 */
+	public Method getMethod() {
+<span class="fc" id="L142">		return this.currentAction.getMethod();</span>
+	}
+	/**
+	 * @return the last laps time of the current action without update
+	 */
+	public Integer getCurrentLapsTime() {
+<span class="fc" id="L148">		return this.currentAction.getCurrentLapsTime();</span>
+	}
+	/**
+	 * @return the object of the current action
+	 */
+	public Object getObject() {
+<span class="fc" id="L154">		return this.currentAction.getObject();</span>
+	}
+	/**
+	 * Compare currentAction lapsTime to another DiscreteAction lapsTime
+	 * @return 1,-1 or 0
+	 */
+	public int compareTo(DiscreteActionInterface c) {
+<span class="fc" id="L161">		return this.currentAction.compareTo(c);</span>
+	}
+	/**
+	 * Currently, this method calls nextAction and return this. &quot;nextAction&quot; method code shall be put in &quot;next&quot; method and &quot;nextAction&quot; method deleted.
+	 * @return DiscreteActionInterface
+	 */
+	public DiscreteActionInterface next() {
+<span class="fc" id="L168">		this.nextAction();</span>
+<span class="fc" id="L169">		return this;</span>
+	}
+	/**
+	 * Returns true if the timmers of onAction or offAction still have some elements
+	 * @return boolean
+	 */
+	public boolean hasNext() {
+<span class="fc bfc" id="L176" title="All 4 branches covered.">		return this.onAction.hasNext() || this.offAction.hasNext();		</span>
+	}
+
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>action (2) (16 mai 2020 17:01:14)</div></body></html>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>DiscreteActionTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">action (16 mai 2020 16:12:31)</a> &gt; <a href="../../index.html" class="el_group">refactoring</a> &gt; <a href="../index.html" class="el_bundle">refactoring</a> &gt; <a href="index.source.html" class="el_package">testAction</a> &gt; <span class="el_source">DiscreteActionTest.java</span></div><h1>DiscreteActionTest.java</h1><pre class="source lang-java linenums">package testAction;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+import action.ClasseTest;
+import action.DiscreteAction;
+import timer.OneShotTimer;
+
+<span class="fc" id="L11">class DiscreteActionTest {</span>
+
+	@Test
+	void testSpendTimeNotNullPositiv() {
+<span class="fc" id="L15">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L16">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L17">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L18">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+		
+<span class="fc" id="L20">		action.next();</span>
+		
+<span class="fc" id="L22">		Integer newLapsTime = 3;</span>
+<span class="fc" id="L23">		action.spendTime(newLapsTime);</span>
+
+<span class="fc" id="L25">		assertEquals(2, action.getCurrentLapsTime());</span>
+		
+<span class="fc" id="L27">	}</span>
+	
+	@Test
+	void testSpendTimeNotNullNegativ() {
+<span class="fc" id="L31">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L32">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L33">		OneShotTimer timer = new OneShotTimer(-8);</span>
+<span class="fc" id="L34">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+		
+<span class="fc" id="L36">		action.next();</span>
+		
+<span class="fc" id="L38">		Integer newLapsTime = 3;</span>
+<span class="fc" id="L39">		action.spendTime(newLapsTime);</span>
+
+<span class="fc" id="L41">		assertEquals(-11, action.getCurrentLapsTime());</span>
+		
+<span class="fc" id="L43">	}</span>
+	
+	@Test
+	void testSpendTimeNull() {
+<span class="fc" id="L47">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L48">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L49">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L50">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+		
+<span class="fc" id="L52">		Integer newLapsTime = 3;</span>
+<span class="fc" id="L53">		action.spendTime(newLapsTime);</span>
+
+<span class="fc" id="L55">		assertEquals(null, action.getCurrentLapsTime());</span>
+		
+<span class="fc" id="L57">	}</span>
+	
+	@Test
+	void testCompareToNullNull() {
+<span class="fc" id="L61">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L62">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L63">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L64">		DiscreteAction action1 = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L65">		DiscreteAction action2 = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L66">		assertEquals(1,action1.compareTo(action2));</span>
+<span class="fc" id="L67">	}</span>
+	
+	@Test
+	void testCompareToIntegerNull() {
+<span class="fc" id="L71">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L72">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L73">		OneShotTimer timer = new OneShotTimer(5);</span>
+<span class="fc" id="L74">		DiscreteAction action1 = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L75">		action1.next();</span>
+<span class="fc" id="L76">		DiscreteAction action2 = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L77">		assertEquals(-1,action1.compareTo(action2));</span>
+<span class="fc" id="L78">	}</span>
+	
+	@Test
+	void testCompareToThisLapsTimeHigherThanClapsTime() {
+<span class="fc" id="L82">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L83">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L84">		OneShotTimer timer1 = new OneShotTimer(1);</span>
+<span class="fc" id="L85">		OneShotTimer timer2 = new OneShotTimer(0);</span>
+<span class="fc" id="L86">		DiscreteAction action1 = new DiscreteAction(test,m,timer1);</span>
+<span class="fc" id="L87">		action1.next();</span>
+<span class="fc" id="L88">		DiscreteAction action2 = new DiscreteAction(test,m,timer2);</span>
+<span class="fc" id="L89">		action2.next();</span>
+<span class="fc" id="L90">		assertEquals(1,action1.compareTo(action2));</span>
+<span class="fc" id="L91">	}</span>
+	
+	@Test
+	void testCompareToThisLapsTimeSmallerThanClapsTime() {
+<span class="fc" id="L95">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L96">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L97">		OneShotTimer timer1 = new OneShotTimer(0);</span>
+<span class="fc" id="L98">		OneShotTimer timer2 = new OneShotTimer(1);</span>
+<span class="fc" id="L99">		DiscreteAction action1 = new DiscreteAction(test,m,timer1);</span>
+<span class="fc" id="L100">		action1.next();</span>
+<span class="fc" id="L101">		DiscreteAction action2 = new DiscreteAction(test,m,timer2);</span>
+<span class="fc" id="L102">		action2.next();</span>
+<span class="fc" id="L103">		assertEquals(-1,action1.compareTo(action2));</span>
+<span class="fc" id="L104">	}</span>
+	
+	@Test
+	void testCompareToThisLapsTimeEqualClapsTime() {
+<span class="fc" id="L108">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L109">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L110">		OneShotTimer timer1 = new OneShotTimer(1);</span>
+<span class="fc" id="L111">		OneShotTimer timer2 = new OneShotTimer(1);</span>
+<span class="fc" id="L112">		DiscreteAction action1 = new DiscreteAction(test,m,timer1);</span>
+<span class="fc" id="L113">		action1.next();</span>
+<span class="fc" id="L114">		DiscreteAction action2 = new DiscreteAction(test,m,timer2);</span>
+<span class="fc" id="L115">		action2.next();</span>
+<span class="fc" id="L116">		assertEquals(0,action1.compareTo(action2));</span>
+<span class="fc" id="L117">	}</span>
+	
+	@Test
+	void testHasNextTimmerNull() {
+<span class="fc" id="L121">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L122">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L123">		DiscreteAction action = new DiscreteAction(test,m,null);</span>
+<span class="fc" id="L124">		assertEquals(false,action.hasNext());</span>
+<span class="fc" id="L125">	}</span>
+	
+	@Test
+	void testHasNextOneShotTimerFirstNext() {
+<span class="fc" id="L129">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L130">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L131">		OneShotTimer timer = new OneShotTimer(1);</span>
+<span class="fc" id="L132">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L133">		assertEquals(true,action.hasNext());</span>
+<span class="fc" id="L134">	}</span>
+	
+	@Test
+	void testHasNextOneShotTimerSecondNext() {
+<span class="fc" id="L138">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L139">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L140">		OneShotTimer timer = new OneShotTimer(1);</span>
+<span class="fc" id="L141">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L142">		action.next();</span>
+<span class="fc" id="L143">		assertEquals(false,action.hasNext());</span>
+<span class="fc" id="L144">	}</span>
+	
+	@Test
+	void testNextWithNullTimer() {
+<span class="fc" id="L148">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L149">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L150">		DiscreteAction action = new DiscreteAction(test,m,null);</span>
+<span class="fc" id="L151">		action.next();</span>
+<span class="fc" id="L152">	}</span>
+	
+	@Test
+	void testNextWithOneShotTimerFirstNext() {
+<span class="fc" id="L156">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L157">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L158">		OneShotTimer timer = new OneShotTimer(1);</span>
+<span class="fc" id="L159">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L160">		action.next();</span>
+<span class="fc" id="L161">		assertEquals(1,action.getCurrentLapsTime());</span>
+<span class="fc" id="L162">	}</span>
+	
+	@Test
+	void testNextWithOneShotTimerSecondNext() {
+<span class="fc" id="L166">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L167">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L168">		OneShotTimer timer = new OneShotTimer(1);</span>
+<span class="fc" id="L169">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L170">		action.next();</span>
+<span class="fc" id="L171">		action.next();</span>
+<span class="fc" id="L172">		assertEquals(null,action.getCurrentLapsTime());</span>
+<span class="fc" id="L173">	}</span>
+	
+	@Test
+	void testToString() {
+<span class="fc" id="L177">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L178">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L179">		OneShotTimer timer = new OneShotTimer(1);</span>
+<span class="fc" id="L180">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L181">		action.next();</span>
+<span class="fc" id="L182">		assertEquals(&quot;Object : &quot; + &quot;action.ClasseTest&quot; + &quot;\n Method : &quot; + &quot;methodeTest&quot;+&quot;\n Stat. : &quot;+ timer + &quot;\n delay: &quot; + 1,action.toString());</span>
+<span class="fc" id="L183">	}</span>
+	
+	@Test
+	void testConstructorWithNullMethodCrash() {
+<span class="fc" id="L187">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L188">		OneShotTimer timer = new OneShotTimer(1);</span>
+<span class="fc" id="L189">		DiscreteAction action = new DiscreteAction(test,null,timer);</span>
+<span class="fc" id="L190">	}</span>
+	
+	@Test
+	void testConstructorWithNullObjectCrash() {
+<span class="fc" id="L194">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L195">		OneShotTimer timer = new OneShotTimer(1);</span>
+<span class="fc" id="L196">		DiscreteAction action = new DiscreteAction(null,m,timer);</span>
+<span class="fc" id="L197">	}</span>
+	
+	@Test
+	void testGetMethod() throws NoSuchMethodException, SecurityException {
+<span class="fc" id="L201">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L202">		String m = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L203">		OneShotTimer timer = new OneShotTimer(1);</span>
+<span class="fc" id="L204">		DiscreteAction action = new DiscreteAction(test,m,timer);</span>
+<span class="fc" id="L205">		assertEquals(test.getClass().getDeclaredMethod(m, new Class&lt;?&gt;[0]),action.getMethod());</span>
+<span class="fc" id="L206">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>action (16 mai 2020 16:12:31)</div></body></html>

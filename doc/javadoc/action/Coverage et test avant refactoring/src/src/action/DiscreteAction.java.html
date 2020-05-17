@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>DiscreteAction.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">action (2) (16 mai 2020 17:01:14)</a> &gt; <a href="../../index.html" class="el_group">src</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">action</a> &gt; <span class="el_source">DiscreteAction.java</span></div><h1>DiscreteAction.java</h1><pre class="source lang-java linenums">package action;
+
+import java.lang.reflect.Method;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import discreteBehaviorSimulator.LogFormatter;
+import timer.Timer;
+
+/**
+ * DiscreteAction is the class that allows the creation and the management of a new discrete action
+ * A DiscreteAction execute a method from an object each lapsTime given by a timmer
+ * This class is characterized by the following informations : 
+ * &lt;ul&gt; 
+ * &lt;li&gt; object&lt;/li&gt;
+ * &lt;li&gt;method&lt;/li&gt;
+ * &lt;li&gt;timer&lt;/li&gt;
+ * &lt;li&gt;lapstime&lt;/li&gt;
+ * &lt;li&gt;logger&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @author Tiphaine Bulou (2016)
+ * @author Flavien Vernier
+ */
+
+// TODO must inherit from Action
+public class DiscreteAction implements DiscreteActionInterface {
+	/**
+	 * @see Object
+	 */
+	private Object object;
+	/**
+	 * @see Method
+	 */
+	private Method method;
+	/**
+	 * timer provides new lapstime
+	 */
+	
+	private Timer timmer;				// timer provides new lapsTime
+	//private TreeSet&lt;Integer&gt; dates;	// obsolete, managed in timer 
+	//private Vector&lt;Integer&gt; lapsTimes;// obsolete, managed in timer
+	/**
+	 * lapstime is thewaiting time
+	 */
+	private Integer lapsTime; 			// waiting time (null if never used)
+	/**
+	 * @see Logger
+	 */
+	private Logger logger;
+
+	// Constructor
+<span class="fc" id="L56">	private DiscreteAction() {</span>
+		// Start logger
+<span class="fc" id="L58">			this.logger = Logger.getLogger(&quot;DAS&quot;);</span>
+			//this.logger = Logger.getLogger(&quot;APP&quot;);
+<span class="fc" id="L60">			this.logger.setLevel(Level.ALL);</span>
+<span class="fc" id="L61">			this.logger.setUseParentHandlers(true);</span>
+			
+			/*FileHandler logFile; 
+			ConsoleHandler logConsole; 
+			try{
+				this.logFile = new FileHandler(this.getClass().getName() + &quot;.log&quot;);
+				//this.logFile.setFormatter(new SimpleFormatter());
+				this.logFile.setFormatter(new LogFormatter());
+				this.logConsole = new ConsoleHandler();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			this.logger.addHandler(logFile);
+			this.logger.addHandler(logConsole);*/
+<span class="fc" id="L75">	}</span>
+	/**
+	 * Construct a discrete action 
+	 * @param o
+	 * @param m
+	 * @param timmer
+	 */
+	public DiscreteAction(Object o, String m, Timer timmer){
+<span class="fc" id="L83">		this();</span>
+<span class="fc" id="L84">		this.object = o;</span>
+		try{	
+<span class="fc" id="L86">			this.method = o.getClass().getDeclaredMethod(m, new Class&lt;?&gt;[0]);</span>
+<span class="fc" id="L87">		}</span>
+<span class="fc" id="L88">		catch(Exception e){</span>
+<span class="fc" id="L89">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L91">		this.timmer = timmer;</span>
+		//this.updateTimeLaps();
+<span class="fc" id="L93">	}</span>
+	
+	// ATTRIBUTION
+	/**
+	 * @param t 
+	 * decrease the action lapsTime by t (consumed time) if lapsTime isn't null
+	 */
+	public void spendTime(int t) {
+<span class="fc" id="L101">		Integer old = this.lapsTime;</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">		if(this.lapsTime != null) {</span>
+<span class="fc" id="L103">			this.lapsTime -= t;</span>
+		}
+<span class="fc" id="L105">		this.logger.log(Level.FINE, &quot;[DA] operate spendTime on  &quot; + this.getObject().getClass().getName() + &quot;:&quot; + this.getObject().hashCode() + &quot;: old time &quot; + old + &quot; new time &quot; + this.getCurrentLapsTime());</span>
+		//System.out.println(         &quot;[DA] operate spendTime on  &quot; + this.getObject().getClass().getName() + &quot;:&quot; + this.getObject().hashCode() + &quot;: old time &quot; + old + &quot; new time &quot; + this.getCurrentLapsTime() + &quot;\n&quot;);
+<span class="fc" id="L107">	}</span>
+
+	// RECUPERATION
+	/**
+	 * @return method
+	 */
+	public Method getMethod(){
+<span class="fc" id="L114">		return method;</span>
+	}
+	/**
+	 * @return lapstime
+	 */
+	public Integer getCurrentLapsTime(){
+<span class="fc" id="L120">		return lapsTime;</span>
+	}
+	/**
+	 * @return object
+	 */
+	public Object getObject(){
+<span class="fc" id="L126">		return object;</span>
+	}
+
+
+
+	// COMPARAISON
+	/**
+	 * Compare two discrete actions lapsTime
+	 * @param c , an object from a class implementing DiscreteActionInterface
+	 * @return 1, -1 or 0
+	 */
+	public int compareTo(DiscreteActionInterface c) {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">		if (this.lapsTime == null) { // no lapstime is equivalent to infinity </span>
+<span class="fc" id="L139">			return 1;</span>
+		}
+<span class="fc bfc" id="L141" title="All 2 branches covered.">		if (c.getCurrentLapsTime() == null) {// no lapstime is equivalent to infinity </span>
+<span class="fc" id="L142">			return -1;</span>
+		}
+<span class="fc bfc" id="L144" title="All 2 branches covered.">    	if(this.lapsTime &gt; c.getCurrentLapsTime()){</span>
+<span class="fc" id="L145">    		return 1;</span>
+    	}
+<span class="fc bfc" id="L147" title="All 2 branches covered.">    	if(this.lapsTime &lt; c.getCurrentLapsTime()){</span>
+<span class="fc" id="L148">    		return -1;</span>
+    	}
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">		if(this.lapsTime == c.getCurrentLapsTime()){</span>
+<span class="fc" id="L151">			return 0;</span>
+		}
+<span class="nc" id="L153">		return 0;</span>
+	}
+	/**
+	 * Return a string with all the informations of the action
+	 * @return string 
+	 */
+	public String toString(){
+<span class="fc" id="L160">		return &quot;Object : &quot; + this.object.getClass().getName() + &quot;\n Method : &quot; + this.method.getName()+&quot;\n Stat. : &quot;+ this.timmer + &quot;\n delay: &quot; + this.lapsTime;</span>
+
+	}
+	/**
+	 * Set the new lapsTime of the action, taken from timmer
+	 * @return the action
+	 */
+	public DiscreteActionInterface next() {
+<span class="fc" id="L168">		Integer old = this.lapsTime;</span>
+<span class="fc" id="L169">		this.lapsTime = this.timmer.next();</span>
+<span class="fc" id="L170">		this.logger.log(Level.FINE, &quot;[DA] operate next on  &quot; + this.getObject().getClass().getName() + &quot;:&quot; + this.getObject().hashCode() + &quot;: old time &quot; + old + &quot; new time &quot; + this.getCurrentLapsTime());</span>
+		//System.out.println(&quot;[DA] operate 'next' on &quot; + this.getObject().getClass().getName() + &quot;:&quot; + this.getObject().hashCode() + &quot;: old time &quot; + old + &quot; new time &quot; + this.getCurrentLapsTime() + &quot;\n&quot;);
+<span class="fc" id="L172">		return this;</span>
+	}
+	/**
+	 * Return true if the action timmer still has element (lapsTimes)
+	 * @return boolean
+	 */
+	public boolean hasNext() {
+<span class="fc" id="L179">		Boolean more=false;</span>
+<span class="fc bfc" id="L180" title="All 4 branches covered.">		if (this.timmer != null &amp;&amp; this.timmer.hasNext()) {</span>
+<span class="fc" id="L181">			more = true;</span>
+		}/*else if (this.dates != null) {
+			more = !this.dates.isEmpty();
+		}else if (this.lapsTimes != null) {
+			more = !this.lapsTimes.isEmpty();
+		}*/
+<span class="fc" id="L187">		return more;		</span>
+	}
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>action (2) (16 mai 2020 17:01:14)</div></body></html>

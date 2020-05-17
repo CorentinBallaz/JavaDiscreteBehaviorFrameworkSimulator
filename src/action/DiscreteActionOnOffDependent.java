@@ -2,7 +2,6 @@ package action;
 
 import java.lang.reflect.Method;
 import java.util.TreeSet;
-import java.util.Vector;
 
 import timer.DateTimer;
 import timer.Timer;
@@ -25,12 +24,10 @@ import timer.Timer;
 
 public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
 	
-	protected DiscreteActionInterface onAction;
-	protected DiscreteActionInterface offAction;
-	protected DiscreteActionInterface currentAction;
-	
-	private Integer currentLapsTime;
-	private Integer lastOffDelay=0;
+	private DiscreteActionInterface onAction;
+	private DiscreteActionInterface offAction;
+	private DiscreteActionInterface currentAction; //the current action is the on one or the off one
+	private Integer lastOffLapsTime=0; //last off action lapsTime
 	
 	/**
 	 * DiscreteActionDependantOnOff is the class that allows the creation and the management of a serie (TreeSet) of discrete actions with an On Off dependence :
@@ -42,52 +39,13 @@ public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
 	 * @param off
 	 * @param timerOff
 	 */
-	/*public DiscreteActionOnOffDependent(Wo o, Method on, Timer timerOn, Method off, Timer timerOff){
-		this.onAction = new DiscreteAction(o, on, timerOn);
-		this.offAction = new DiscreteAction(o, off, timerOff);
-		
-		this.currentAction = this.onAction;
-	}*/
 	
 	public DiscreteActionOnOffDependent(Object o, String on, Timer timerOn, String off, Timer timerOff){
 		this.onAction = new DiscreteAction(o, on, timerOn);
 		this.offAction = new DiscreteAction(o, off, timerOff);
-		
 		this.currentAction = this.offAction;
-		this.currentLapsTime = 0;
 	}
 
-	private void dates2Timalapse(TreeSet<Integer> datesOn, TreeSet<Integer> datesOff, Vector<Integer> timeLapseOn, Vector<Integer> timeLapseOff) {
-		Vector<Integer> currentTimeLapse;
-		TreeSet<Integer> currentDates;
-		Integer date=0;
-		if(datesOn.first()<datesOff.first()) {
-			currentTimeLapse = timeLapseOn;
-			currentDates = datesOn;
-		}else {
-			currentTimeLapse = timeLapseOff;	
-			currentDates = datesOff;		
-		}
-		Integer nextDate;
-		
-		while(datesOn.size()>0 || datesOff.size()>0) {
-			nextDate = currentDates.first();
-		
-			currentTimeLapse.add(nextDate - date);
-			currentDates.remove(nextDate);
-		
-			date = nextDate;
-			
-			if(currentDates == datesOn) {
-				currentDates = datesOff;
-				currentTimeLapse = timeLapseOff;
-			}else {
-				currentDates = datesOn;
-				currentTimeLapse = timeLapseOn;			
-			}
-		}
-		
-	}
 	/**
 	 * 
 	 * @param o
@@ -97,15 +55,8 @@ public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
 	 * @param datesOff
 	 */
 	public DiscreteActionOnOffDependent(Object o, String on, TreeSet<Integer> datesOn, String off, TreeSet<Integer> datesOff){
-		/*Vector<Integer> timeLapseOn = new Vector<Integer>();
-		Vector<Integer> timeLapseOff = new Vector<Integer>();
-		
-		dates2Timalapse((TreeSet<Integer>)datesOn.clone(), (TreeSet<Integer>)datesOff.clone(), timeLapseOn, timeLapseOff);
-		*/
 		this.onAction = new DiscreteAction(o, on, new DateTimer(datesOn));
 		this.offAction = new DiscreteAction(o, off, new DateTimer(datesOff));
-		
-		
 		
 		if(datesOn.first() < datesOff.first()){
 			this.currentAction = this.onAction;
@@ -114,40 +65,26 @@ public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
 		}
 	}
 	/**
-	 * Select the next action, if current action is On then select Off action, if current is Off then select On
-	 */
-	public void nextAction(){
-		if (this.currentAction == this.onAction){
-			this.currentAction = this.offAction;
-			this.currentAction = this.currentAction.next();
-			this.lastOffDelay = this.currentAction.getCurrentLapsTime();
-		}else{
-			this.currentAction = this.onAction;
-			this.currentAction = this.currentAction.next();
-			this.currentAction.spendTime(this.lastOffDelay);
-		}
-	}
-	/**
-	 * Decrease the lapsTime by t of the discrete action
+	 * Decrease the lapsTime by t of the current action
 	 * @param t
 	 */
 	public	void spendTime(int t) {
 		this.currentAction.spendTime(t);
 	}
 	/**
-	 * @return the method of the current action
+	 * @return currentAction method
 	 */
 	public Method getMethod() {
 		return this.currentAction.getMethod();
 	}
 	/**
-	 * @return the last laps time of the current action without update
+	 * @return currentAction lapsTime
 	 */
 	public Integer getCurrentLapsTime() {
 		return this.currentAction.getCurrentLapsTime();
 	}
 	/**
-	 * @return the object of the current action
+	 * @return currentAction object
 	 */
 	public Object getObject() {
 		return this.currentAction.getObject();
@@ -160,11 +97,21 @@ public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
 		return this.currentAction.compareTo(c);
 	}
 	/**
-	 * Return DiscreteActionInterface for the next Action
+	 * Select the next action, if current action is On then select Off action, if current is Off then select On.
+	 * Also, set the new lapsTime of the next action (new currentAction). If the next action is a onAction, then her new
+	 * lapsTime is descreased (spendTime) by the last offAction delay.
 	 * @return DiscreteActionInterface
 	 */
 	public DiscreteActionInterface next() {
-		this.nextAction();
+		if (this.currentAction == this.onAction){
+			this.currentAction = this.offAction;
+			this.currentAction = this.currentAction.next();
+			this.lastOffLapsTime = this.currentAction.getCurrentLapsTime();
+		}else{
+			this.currentAction = this.onAction;
+			this.currentAction = this.currentAction.next();
+			this.currentAction.spendTime(this.lastOffLapsTime);
+		}
 		return this;
 	}
 	/**

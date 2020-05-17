@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>DiscreteActionOnOffDependentTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">action (16 mai 2020 16:12:31)</a> &gt; <a href="../../index.html" class="el_group">refactoring</a> &gt; <a href="../index.html" class="el_bundle">refactoring</a> &gt; <a href="index.source.html" class="el_package">testAction</a> &gt; <span class="el_source">DiscreteActionOnOffDependentTest.java</span></div><h1>DiscreteActionOnOffDependentTest.java</h1><pre class="source lang-java linenums">package testAction;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.TreeSet;
+
+import org.junit.jupiter.api.Test;
+
+import action.ClasseTest;
+import action.DiscreteAction;
+import action.DiscreteActionOnOffDependent;
+import timer.OneShotTimer;
+
+<span class="fc" id="L14">class DiscreteActionOnOffDependentTest {</span>
+
+	@Test
+	void testConstructorWithTwoActions() {
+<span class="fc" id="L18">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L19">		String methodeOn = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L20">		OneShotTimer timerOn = new OneShotTimer(5);</span>
+		
+<span class="fc" id="L22">		String methodeOff = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L23">		OneShotTimer timerOff = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L25">		DiscreteActionOnOffDependent action = new DiscreteActionOnOffDependent(test,methodeOn,timerOn,methodeOff,timerOff);</span>
+		
+<span class="fc" id="L27">		assertEquals(methodeOff,action.getMethod().getName());</span>
+<span class="fc" id="L28">		assertEquals(test,action.getObject());</span>
+<span class="fc" id="L29">	}</span>
+	
+	@Test
+	void testConstructorWithIntegerTreeSetFirstOnLowerThanFirstOff() {
+<span class="fc" id="L33">		TreeSet&lt;Integer&gt; datesOn = new TreeSet&lt;Integer&gt;();</span>
+<span class="fc" id="L34">		TreeSet&lt;Integer&gt; datesOff = new TreeSet&lt;Integer&gt;();</span>
+<span class="fc" id="L35">		datesOn.add(1);</span>
+<span class="fc" id="L36">		datesOn.add(3);</span>
+<span class="fc" id="L37">		datesOff.add(2);</span>
+<span class="fc" id="L38">		datesOff.add(4);</span>
+		
+<span class="fc" id="L40">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L41">		String methodeOn = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L42">		OneShotTimer timerOn = new OneShotTimer(5);</span>
+		
+<span class="fc" id="L44">		String methodeOff = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L45">		OneShotTimer timerOff = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L47">		DiscreteActionOnOffDependent action = new DiscreteActionOnOffDependent(test,methodeOn,datesOn,methodeOff,datesOff);</span>
+		
+<span class="fc" id="L49">		assertEquals(methodeOn,action.getMethod().getName());</span>
+<span class="fc" id="L50">		assertEquals(test,action.getObject());</span>
+		
+<span class="fc" id="L52">	}</span>
+	
+	@Test
+	void testConstructorWithIntegerTreeSetFirstOnHigherThanFirstOff() {
+<span class="fc" id="L56">		TreeSet&lt;Integer&gt; datesOn = new TreeSet&lt;Integer&gt;();</span>
+<span class="fc" id="L57">		TreeSet&lt;Integer&gt; datesOff = new TreeSet&lt;Integer&gt;();</span>
+<span class="fc" id="L58">		datesOn.add(2);</span>
+<span class="fc" id="L59">		datesOn.add(4);</span>
+<span class="fc" id="L60">		datesOff.add(1);</span>
+<span class="fc" id="L61">		datesOff.add(3);</span>
+		
+<span class="fc" id="L63">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L64">		String methodeOn = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L65">		OneShotTimer timerOn = new OneShotTimer(5);</span>
+		
+<span class="fc" id="L67">		String methodeOff = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L68">		OneShotTimer timerOff = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L70">		DiscreteActionOnOffDependent action = new DiscreteActionOnOffDependent(test,methodeOn,datesOn,methodeOff,datesOff);</span>
+		
+<span class="fc" id="L72">		assertEquals(methodeOff,action.getMethod().getName());</span>
+<span class="fc" id="L73">		assertEquals(test,action.getObject());</span>
+		
+<span class="fc" id="L75">	}</span>
+	
+	@Test
+	void testNextOnAction() {
+<span class="fc" id="L79">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L80">		String methodeOn = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L81">		OneShotTimer timerOn = new OneShotTimer(5);</span>
+		
+<span class="fc" id="L83">		String methodeOff = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L84">		OneShotTimer timerOff = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L86">		DiscreteActionOnOffDependent action = new DiscreteActionOnOffDependent(test,methodeOn,timerOn,methodeOff,timerOff);</span>
+<span class="fc" id="L87">		action.next();</span>
+<span class="fc" id="L88">		assertEquals(methodeOn,action.getMethod().getName());</span>
+<span class="fc" id="L89">		assertEquals(test,action.getObject());</span>
+<span class="fc" id="L90">	}</span>
+	
+	@Test
+	void testNextOffAction() {
+<span class="fc" id="L94">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L95">		String methodeOn = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L96">		OneShotTimer timerOn = new OneShotTimer(5);</span>
+		
+<span class="fc" id="L98">		String methodeOff = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L99">		OneShotTimer timerOff = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L101">		DiscreteActionOnOffDependent action = new DiscreteActionOnOffDependent(test,methodeOn,timerOn,methodeOff,timerOff);</span>
+<span class="fc" id="L102">		action.next();</span>
+<span class="fc" id="L103">		action.next();</span>
+<span class="fc" id="L104">		assertEquals(methodeOff,action.getMethod().getName());</span>
+<span class="fc" id="L105">		assertEquals(test,action.getObject());</span>
+<span class="fc" id="L106">	}</span>
+	
+	@Test
+	void testSpendTime() {
+<span class="fc" id="L110">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L111">		String methodeOn = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L112">		OneShotTimer timerOn = new OneShotTimer(5);</span>
+		
+<span class="fc" id="L114">		String methodeOff = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L115">		OneShotTimer timerOff = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L117">		DiscreteActionOnOffDependent action = new DiscreteActionOnOffDependent(test,methodeOn,timerOn,methodeOff,timerOff);</span>
+<span class="fc" id="L118">		action.next();</span>
+<span class="fc" id="L119">		action.spendTime(3);</span>
+
+<span class="fc" id="L121">		assertEquals(2,action.getCurrentLapsTime());</span>
+		
+<span class="fc" id="L123">	}</span>
+	
+	@Test
+	void testCompareTo() {
+		
+		//CompareTo ayant déjà été testé dans DiscreteAction, on estime ce test suffisant
+		
+<span class="fc" id="L130">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L131">		String methodeOn = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L132">		OneShotTimer timerOn = new OneShotTimer(5);</span>
+		
+<span class="fc" id="L134">		String methodeOff = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L135">		OneShotTimer timerOff = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L137">		DiscreteActionOnOffDependent action = new DiscreteActionOnOffDependent(test,methodeOn,timerOn,methodeOff,timerOff);</span>
+<span class="fc" id="L138">		action.next();</span>
+		
+<span class="fc" id="L140">		String methodeActionSeule = &quot;methodeTest3&quot;;</span>
+<span class="fc" id="L141">		OneShotTimer timerActionSeule = new OneShotTimer(10);</span>
+<span class="fc" id="L142">		DiscreteAction actionSeule = new DiscreteAction(test,methodeActionSeule,timerActionSeule);</span>
+		//actionSeule lapsTime is null
+<span class="fc" id="L144">		assertEquals(-1,action.compareTo(actionSeule));</span>
+		
+		//set actionSeule lapsTime 
+<span class="fc" id="L147">		actionSeule.next();</span>
+<span class="fc" id="L148">		assertEquals(-1,action.compareTo(actionSeule));</span>
+		
+<span class="fc" id="L150">	}</span>
+	
+	@Test
+	void testHasNextWithNoAndOneAndTwoNext() {
+<span class="fc" id="L154">		ClasseTest test = new ClasseTest();</span>
+<span class="fc" id="L155">		String methodeOn = &quot;methodeTest&quot;;</span>
+<span class="fc" id="L156">		OneShotTimer timerOn = new OneShotTimer(5);</span>
+		
+<span class="fc" id="L158">		String methodeOff = &quot;methodeTest2&quot;;</span>
+<span class="fc" id="L159">		OneShotTimer timerOff = new OneShotTimer(3);</span>
+		
+<span class="fc" id="L161">		DiscreteActionOnOffDependent action = new DiscreteActionOnOffDependent(test,methodeOn,timerOn,methodeOff,timerOff);</span>
+
+<span class="fc" id="L163">		assertEquals(true,action.hasNext());</span>
+		
+<span class="fc" id="L165">		action.next();</span>
+
+<span class="fc" id="L167">		assertEquals(true,action.hasNext());</span>
+		
+<span class="fc" id="L169">		action.next();</span>
+
+<span class="fc" id="L171">		assertEquals(false,action.hasNext());</span>
+<span class="fc" id="L172">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>action (16 mai 2020 16:12:31)</div></body></html>
