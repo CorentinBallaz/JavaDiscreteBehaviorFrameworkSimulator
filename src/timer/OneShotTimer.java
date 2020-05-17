@@ -13,9 +13,12 @@ public class OneShotTimer  implements Timer {
 		this.at = at;
 		this.hasNext = true;
 	}
+	public Integer getAt() {
+		return this.at;
+	}
 
 	/**
-	 *@return bool hasNext
+	 *@return true if method {@link #next()} hasn't been called, else false
 	 */
 	@Override
 	public boolean hasNext() {
@@ -23,7 +26,7 @@ public class OneShotTimer  implements Timer {
 	}
 
 	/**
-	 *Returns the value of the at attribute of the Object OneShotTimer, and disables it
+	 *Returns the value of the "at" attribute of the Object OneShotTimer, then set the at attribute to null and hasNext to false
 	 *@return next
 	 */
 	@Override

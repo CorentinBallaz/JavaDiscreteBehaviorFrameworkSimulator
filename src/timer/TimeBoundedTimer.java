@@ -36,16 +36,17 @@ public class TimeBoundedTimer implements Timer {
 	}
 	
 	/**
-	 * Increment next with {@link #next} until it reaches startTime
+	 * TimerA recieve a TimerB
+	 * nextA of TimerA will increase with next() from TimerB until nextA reaches a time t = startTime 
 	 * Set hasNext to true if next hasn't reach stopTime
 	 * Set hasNext to false if it has
 	 */
 	private void init() {
 		this.next = this.timer2bound.next();
-		while (this.next < this.startTime) {
-			this.next += this.timer2bound.next();
+		while ((this.next < this.startTime)&(this.timer2bound.hasNext())) {
+			this.next += this.timer2bound.next(); 
 		}
-		if(this.next<this.stopTime) {
+		if(this.next<this.stopTime&(this.timer2bound.hasNext())) {
 			this.hasNext = true;
 		}else {
 			this.hasNext = false;
@@ -64,7 +65,10 @@ public class TimeBoundedTimer implements Timer {
 	 *Increment time with next 
 	 *Set next with timer2bound.next() if time hasn't reach stopTime 
 	 *or null
-	 *@return next
+	 *Once nextA reached startTime this next() method will be triggered
+	 *It increase nextA with the next() of TimerB to ensure that time atribute of each object increses at the same speed
+	 *Once nextA reaches stopTime hasNextA turn to false and nextA to null
+	 *@return nextA
 	 */
 	@Override
 	public Integer next() {
