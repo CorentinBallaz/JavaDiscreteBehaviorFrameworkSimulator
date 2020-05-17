@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import action.DiscreteAction;
-import discreteBehaviorSimulator.ClockObserver;
-import discreteBehaviorSimulator.DiscreteActionSimulator;
+import discretebehaviorsimulator.Clock;
+import discretebehaviorsimulator.ClockObserver;
+import discretebehaviorsimulator.DiscreteActionSimulator;
 import timer.OneShotTimer;
 import timer.PeriodicTimer;
-import discreteBehaviorSimulator.Clock;
 
 @TestMethodOrder(OrderAnnotation.class)
 class DiscreteActionSimulatorTest {
