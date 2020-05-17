@@ -24,10 +24,10 @@ import timer.Timer;
 
 public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
 	
-	protected DiscreteActionInterface onAction;
-	protected DiscreteActionInterface offAction;
-	protected DiscreteActionInterface currentAction;
-	private Integer lastOffDelay=0;
+	private DiscreteActionInterface onAction;
+	private DiscreteActionInterface offAction;
+	private DiscreteActionInterface currentAction; //the current action is the on one or the off one
+	private Integer lastOffLapsTime=0; //last off action lapsTime
 	
 	/**
 	 * DiscreteActionDependantOnOff is the class that allows the creation and the management of a serie (TreeSet) of discrete actions with an On Off dependence :
@@ -106,11 +106,11 @@ public class DiscreteActionOnOffDependent implements DiscreteActionInterface {
 		if (this.currentAction == this.onAction){
 			this.currentAction = this.offAction;
 			this.currentAction = this.currentAction.next();
-			this.lastOffDelay = this.currentAction.getCurrentLapsTime();
+			this.lastOffLapsTime = this.currentAction.getCurrentLapsTime();
 		}else{
 			this.currentAction = this.onAction;
 			this.currentAction = this.currentAction.next();
-			this.currentAction.spendTime(this.lastOffDelay);
+			this.currentAction.spendTime(this.lastOffLapsTime);
 		}
 		return this;
 	}
