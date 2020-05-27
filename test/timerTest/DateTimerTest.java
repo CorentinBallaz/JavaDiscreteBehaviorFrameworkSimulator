@@ -1,4 +1,4 @@
-package timertest;
+package timerTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
