@@ -43,10 +43,10 @@ public class TimeBoundedTimer implements Timer {
 	 */
 	private void init() {
 		this.next = this.timer2bound.next();
-		while ((this.next < this.startTime)&(this.timer2bound.hasNext())) {
+		while ((this.next < this.startTime)&&(this.timer2bound.hasNext())) {
 			this.next += this.timer2bound.next(); 
 		}
-		if(this.next<this.stopTime&(this.timer2bound.hasNext())) {
+		if(this.next<this.stopTime&&(this.timer2bound.hasNext())) {
 			this.hasNext = true;
 		}else {
 			this.hasNext = false;
@@ -72,15 +72,15 @@ public class TimeBoundedTimer implements Timer {
 	 */
 	@Override
 	public Integer next() {
-		Integer next = this.next;
+		Integer next1 = this.next;
 		this.time+=this.next;
 		if(this.time < this.stopTime) {
 			this.next = this.timer2bound.next();
 		}else {
-			next = null;
+			next1 = null;
 			this.hasNext=false;
 		}
-		return next;
+		return next1;
 	}
 
 }

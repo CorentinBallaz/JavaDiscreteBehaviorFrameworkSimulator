@@ -1,5 +1,7 @@
 package timer;
 
+import java.util.NoSuchElementException;
+
 public class OneShotTimer  implements Timer {
 	
 	private Integer at;
@@ -31,6 +33,9 @@ public class OneShotTimer  implements Timer {
 	 */
 	@Override
 	public Integer next() {
+		if (this.at == null) {
+		    throw new NoSuchElementException();
+		  }
 		Integer next=this.at;
 		this.at=null;
 		this.hasNext = false;
