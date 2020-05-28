@@ -1,7 +1,7 @@
 package timer;
 
+import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.Vector;
 
 /**
  * @author Flavien Vernier
@@ -12,11 +12,10 @@ import java.util.Vector;
 
 public class RandomTimer implements Timer {
 	
-	public static enum randomDistribution {
+	public enum randomDistribution {
 		POISSON, EXP, POSIBILIST, GAUSSIAN;
 	}
 	
-	//private static String randomDistributionString[] = {"POISSON", "EXP", "POSIBILIST", "GAUSSIAN"};
 	
 	private Random r = new Random();
 	private randomDistribution distribution;
@@ -24,7 +23,6 @@ public class RandomTimer implements Timer {
 	private double mean;
 	private double lolim;
 	private double hilim; 
-	//private int width; 
 	
 	
 	/**
@@ -52,7 +50,7 @@ public class RandomTimer implements Timer {
 	 * @param param
 	 * @throws Exception if the distribution neither is EXP nor POISSON
 	 */
-	public RandomTimer(randomDistribution distribution, double param) throws Exception{
+	public RandomTimer(randomDistribution distribution, double param){
 		if(distribution == randomDistribution.EXP ){
 			this.distribution = distribution;
 			this.rate = param;
@@ -65,8 +63,6 @@ public class RandomTimer implements Timer {
 			this.mean = param;
 			this.lolim = 0;
 			this.hilim = Double.POSITIVE_INFINITY;
-		}else{
-			throw new Exception("Bad Timer constructor for selected distribution");
 		}
 	}
 	
@@ -79,15 +75,13 @@ public class RandomTimer implements Timer {
 	 * @param hilim
 	 * @throws Exception if the distribution neither is POSIBILIST nor GAUSSIAN
 	 */
-	public RandomTimer(randomDistribution distribution, int lolim, int hilim) throws Exception{
+	public RandomTimer(randomDistribution distribution, int lolim, int hilim){
 		if(distribution == randomDistribution.POSIBILIST || distribution == randomDistribution.GAUSSIAN){
 			this.distribution = distribution;
-			this.mean = lolim + (hilim - lolim)/2;
+			this.mean = lolim + ((double)hilim - (double)lolim)/2;
 			this.rate = Double.NaN;
 			this.lolim = lolim;
 			this.hilim = hilim;
-		}else{
-			throw new Exception("Bad Timer constructor for selected distribution");
 		}
 	}
 	
@@ -157,7 +151,10 @@ public class RandomTimer implements Timer {
 	 *
 	 */
 	@Override
-	public Integer next(){
+	public Integer next() {
+		if (this.distribution == null) {
+		    throw new NoSuchElementException();
+		}
 		switch (this.distribution){
 		case POSIBILIST :
 			return this.nextTimePosibilist();
@@ -168,27 +165,16 @@ public class RandomTimer implements Timer {
 		case GAUSSIAN :
 			return this.nextTimeGaussian();
 		}
-		return -1; // Theoretically impossible !!!
+		return -1 ;		
 	}
 	
-	/*
-	 * Equivalent to methodInvocator.RandomTimer#next()
-	 * 
-	 * @param since has no effect
-	 * 
-	 * @see methodInvocator.RandomTimer#next(int)
-	 */
-	/*@Override
-	public Integer next(int since){
-		return this.next();
-	}*/
 	
 	/**
 	 * 
 	 * @return returns the next value following the posibilist distribution
 	 */
 	private int nextTimePosibilist(){
-	    return (int)this.lolim + (int)(this.r.nextDouble() * (this.hilim - this.lolim));
+	    return (int)this.lolim + (int)(this.r.nextInt() * (this.hilim - this.lolim));
 	}
 	
 	/**
@@ -196,7 +182,7 @@ public class RandomTimer implements Timer {
 	 * @return returns the next value following the Exp distribution
 	 */
 	private int nextTimeExp(){
-	    return (int)(-Math.log(1.0 - this.r.nextDouble()) / this.rate);
+	    return (int)(-Math.log(1.0 - this.r.nextInt()) / this.rate);
 	}
 	
 	
@@ -206,13 +192,13 @@ public class RandomTimer implements Timer {
 	 */
 	private int nextTimePoisson() {
 	    
-	    double L = Math.exp(-this.mean);
+	    double l = Math.exp(-this.mean);
 	    int k = 0;
 	    double p = 1.0;
 	    do {
 	        p = p * this.r.nextDouble();
 	        k++;
-	    } while (p > L);
+	    } while (p > l);
 	    return k - 1;
 	}   		
 	    
